@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+var tape = require('tape');
+var through = require('through2')
+var duplexer = require('duplexer')
+
+var tap = tape.createStream(); // Not possible because pipe don't accepts { objectMode: true }
+
+var out = through()
+var stream = duplexer(tap, out)
+
+tap.on('data', function(data) {
+    console.log(data.toString());
+})
+
+
+
+
+process.stdin
+  .pipe(stream)
+  .pipe(process.stdout)
+
+process.on('exit', function() {
+  if (stream.errors.length) process.exit(1)
+})

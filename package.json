@@ -1,0 +1,38 @@
+{
+  "name": "tabe",
+  "version": "0.0.1",
+  "description": "Beautiful tape tests for browser and CLI.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./bin/cmd test/test",
+    "testnode": "node test/node",
+    "testbrowser": "open test/browser.html",
+    "bundle": "browserify ./browserify > dist/tabe.js"
+  },
+  "dependencies": {
+    "tape": "^4.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Josenzo/tabe.git"
+  },
+  "keywords": [
+    "tape",
+    "tests",
+    "browser",
+    "cli",
+    "style",
+    "css",
+    "stdout"
+  ],
+  "bin": {
+    "tabe": "./bin/cmd",
+    "tabe-pipe": "./bin/pipe"
+  },
+  "author": "Josema Enzo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Josenzo/tabe/issues"
+  },
+  "homepage": "https://github.com/Josenzo/tabe#readme"
+}
