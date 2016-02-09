@@ -1,7 +1,7 @@
 {
   "name": "tabe",
   "version": "0.0.1",
-  "description": "Beautiful tape tests for browser and CLI.",
+  "description": "Beautiful tape tests for browsers and CLI.",
   "main": "index.js",
   "scripts": {
     "test": "./bin/cmd test/test",
@@ -10,7 +10,9 @@
     "bundle": "browserify ./browserify > dist/tabe.js"
   },
   "dependencies": {
-    "tape": "^4.4.0"
+    "duplexer": "^0.1.1",
+    "tape": "^4.4.0",
+    "through2": "^2.0.0"
   },
   "repository": {
     "type": "git",

@@ -5,13 +5,16 @@ var tabe = {tape:require('tape')};
 (function(){
 
     var isBrowser = typeof window != 'undefined';
-    var id = 0;
+    var test_id = 0;
+    var assert_id = 0;
     var pass = 0;
     var fail = 0;
+    var parents = {};
+    var tabassert = '   ';
 
     tabe.createStream = function ( ) {
 
-        id = pass = fail = 0;
+        assert_id = pass = fail = 0;
         var stream = tabe.tape.createStream({ objectMode: true });
         stream.on('data', tabe.onData);
         stream.on('end', tabe.onEnd);
@@ -21,7 +24,6 @@ var tabe = {tape:require('tape')};
 
 
     tabe.onData = function( data ){
-        // console.log(data);
 
         // Message
         if ( typeof data == 'string' )
@@ -29,70 +31,91 @@ var tabe = {tape:require('tape')};
 
         // New test
         if ( data.type == 'test') {
-            var strIdTest = (data.id+1)+') ';
+
+            parents[data.id] = (typeof data.parent == 'number') ? parents[data.parent]+1 : 0;
+
+            test_id += 1;
+            var strIdTest = (test_id)+') ';
+            var spaceinnertest = (parents[data.id]>0) ? '' : '\n';
+            var tabnivel = repeatTab(tabassert, parents[data.id]);
             (isBrowser) ? 
-                console.log('%c'+ strIdTest + data.name, 'font-weight:bold; color:###')
+                console.log(tabnivel+'%c'+ strIdTest + data.name, 'font-weight:bold; color:###')
             :
-                console.log('\n\033[1m'+strIdTest+data.name+'\033[0m');
+                console.log(tabnivel+'\033[1m'+strIdTest+data.name+'\033[0m', parents[data.id]);
         }
 
+
         // End test
-        else if ( data.type == 'end' )
-            console.log('');
+        else if ( data.type == 'end' ) {
+            if (parents[data.test] === 0)
+                console.log('');
+        }
 
 
         // Pass
         else if ( data.ok ) {
-            id += 1;
+            assert_id += 1;
             pass += 1;
-            var strIdAssert = id+' ';
+            var strIdAssert = assert_id+' ';
+            var tabnivel = repeatTab(tabassert, parents[data.test]);
             (isBrowser) ? 
-                console.log('   %c✔ %c'+ strIdAssert + data.name, 'color:green', 'color:#666')
+                console.log(tabnivel+tabassert+'%c✔ %c'+ strIdAssert + data.name, 'color:green', 'color:#666')
             :
-                console.log('   \033[32m✔\033[0m \033[90m'+strIdAssert+data.name+'\033[0m');
+                console.log(tabnivel+tabassert+'\033[32m✔\033[0m \033[90m'+strIdAssert+data.name+'\033[0m');
         }
 
         // Fail
         else if ( !data.ok ) {
             // console.log(2,data);
-            id += 1;
+            assert_id += 1;
             fail += 1;
+            var tabnivel = repeatTab(tabassert, parents[data.test]);
 
             if (isBrowser) {
-                console.warn('     '+id, data.error);
-                console.warn('      '+spaces(id)+'operator: '+data.operator);
-                console.warn('      '+spaces(id)+'expected: '+data.expected);
-                console.warn('      '+spaces(id)+'actual: '+data.actual);
+                console.warn(tabnivel+tabassert+'  '+assert_id, data.error);
+                console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'operator: '+data.operator);
+                console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'expected: '+data.expected);
+                console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'actual: '+data.actual);
             }
             else {
-                console.log('   \033[31m✘ '+ id+' '+ data.name+'\033[0m');
-                console.log('     \033[31m----\033[0m');
-                console.log('      \033[31m'+spaces(id)+'operator: '+data.operator+'\033[0m');
-                console.log('      \033[31m'+spaces(id)+'expected: '+data.expected+'\033[0m');
-                console.log('      \033[31m'+spaces(id)+'actual: '+data.actual+'\033[0m');
-                console.log('      \033[31m'+spaces(id)+'at: '+data.at+'\033[0m');
-                console.log('     \033[31m....\033[0m');
+                console.log(tabnivel+tabassert+'\033[31m✘ '+ assert_id+' '+ data.name+'\033[0m');
+                console.log(tabnivel+tabassert+'  \033[31m----\033[0m');
+                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'operator: '+data.operator+'\033[0m');
+                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'expected: '+data.expected+'\033[0m');
+                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'actual: '+data.actual+'\033[0m');
+                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'at: '+data.at+'\033[0m');
+                console.log(tabnivel+tabassert+'  \033[31m....\033[0m');
             }
         }
 
+        // console.log(data);
 
 
     };
 
 
     tabe.onEnd = function() {
-        console.log('theend')
+        console.log('theend');
+        assert_id = pass = fail = 0;
     };
 
 
-    function spaces( str ) {
-        var space = '';
+    function calcSpacesForIdTest( str ) {
+        var newstr = '';
         for (var i=0, t=str.toString().length; i<t; ++i)
-            space += ' ';
+            newstr += ' ';
 
-        return space;
+        return newstr;
     }
 
+
+    function repeatTab( tabstr, repeats ) {
+        var newstr = '';
+        for (var i=0; i<repeats; ++i)
+            newstr += tabstr;
+
+        return newstr;
+    }
 
         // line = line.replace(/\-\-\-/, '\n  \033[31m---');
         // line = line.replace(/\n/, '');

@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
 var tape = require('tape');
-var through = require('through2')
-var duplexer = require('duplexer')
+var through = require('through2');
+var duplexer = require('duplexer');
 
-var tap = tape.createStream(); // Not possible because pipe don't accepts { objectMode: true }
 
-var out = through()
-var stream = duplexer(tap, out)
+// var tap = tape.createStream({ objectMode: true });  // Not working can't get an object
+var tap = tape.createStream();                         // Working
+var out = through();
+var stream = duplexer(tap, out);
+
 
 tap.on('data', function(data) {
     console.log(data.toString());
 })
-
-
 
 
 process.stdin
@@ -21,5 +21,5 @@ process.stdin
   .pipe(process.stdout)
 
 process.on('exit', function() {
-  if (stream.errors.length) process.exit(1)
+  if (stream.errors.length) process.exit(1);
 })

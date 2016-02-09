@@ -12,25 +12,33 @@ test('First test', function (t) {
 
 
 
-test('All asserts', function(t){
+test('Second', function(t){
     t.ok(true);
+
+
+
     t.equal(3, 1+2);
     t.deepEqual([1,2,[3,4]], [1,2,[3,4]]);
     t.notDeepEqual([1,2,[3,4,5]], [1,2,[3,4]]);
+
+    t.test('Inside second', function(t){
+        t.equal(3, 1+2);
+        t.equal(1, 1+2);
+        t.equal(3, 1+2);
+        t.end();
+    })
+
     t.end();
 })
 
 
-test('double end', function (t) {
+test('Third double end', function (t) {
     t.equal(1 + 1, 2);
     t.end();
-    setTimeout(function () {
-        t.end();
-    }, 5);
 });
 
 
-test('Second test', function (t) {
+test('Four test', function (t) {
 
     t.plan(7);
     
@@ -41,18 +49,6 @@ test('Second test', function (t) {
     t.deepEqual([ 3, 4, 5 ], [ 3, 4, 2+3 ]);
     t.deepEqual([ 3, 4, 5 ], [ 3, 4, 2 ]);
     t.end('dadadada');
-
-});
-
-
-test('Third test', function (t) {
-
-    t.plan(2);
-    t.equal(1, 1, 'more explain');
-    t.equal(true, false);
-    t.equal(1, 1);
-    t.equal(true, false, 'more explain on fail');
-    t.pass('passed')
 
 });
 
