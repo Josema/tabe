@@ -9,12 +9,16 @@ var tabe = {tape:require('tape')};
     var assert_id = 0;
     var pass = 0;
     var fail = 0;
+    var fail_ids = [];
     var parents = {};
+    var tabcli = ' ';
     var tabassert = '   ';
+    var ms;
 
     tabe.createStream = function ( ) {
 
-        assert_id = pass = fail = 0;
+        console.log('');
+        test_id = assert_id = pass = fail = 0;
         var stream = tabe.tape.createStream({ objectMode: true });
         stream.on('data', tabe.onData);
         stream.on('end', tabe.onEnd);
@@ -32,6 +36,8 @@ var tabe = {tape:require('tape')};
         // New test
         if ( data.type == 'test') {
 
+            if (data.id === 0) ms = new Date().getTime();
+
             parents[data.id] = (typeof data.parent == 'number') ? parents[data.parent]+1 : 0;
 
             test_id += 1;
@@ -39,9 +45,9 @@ var tabe = {tape:require('tape')};
             var spaceinnertest = (parents[data.id]>0) ? '' : '\n';
             var tabnivel = repeatTab(tabassert, parents[data.id]);
             (isBrowser) ? 
-                console.log(tabnivel+'%c'+ strIdTest + data.name, 'font-weight:bold; color:###')
+                console.log(tabnivel+'%c'+ strIdTest + data.name, 'font-weight:bold; color:#555')
             :
-                console.log(tabnivel+'\033[1m'+strIdTest+data.name+'\033[0m', parents[data.id]);
+                console.log(tabcli+tabnivel+'\033[1m'+strIdTest+data.name+'\033[0m');
         }
 
 
@@ -61,7 +67,7 @@ var tabe = {tape:require('tape')};
             (isBrowser) ? 
                 console.log(tabnivel+tabassert+'%c✔ %c'+ strIdAssert + data.name, 'color:green', 'color:#666')
             :
-                console.log(tabnivel+tabassert+'\033[32m✔\033[0m \033[90m'+strIdAssert+data.name+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'\033[32m✔\033[0m \033[90m'+strIdAssert+data.name+'\033[0m');
         }
 
         // Fail
@@ -69,6 +75,7 @@ var tabe = {tape:require('tape')};
             // console.log(2,data);
             assert_id += 1;
             fail += 1;
+            fail_ids.push(assert_id);
             var tabnivel = repeatTab(tabassert, parents[data.test]);
 
             if (isBrowser) {
@@ -76,15 +83,14 @@ var tabe = {tape:require('tape')};
                 console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'operator: '+data.operator);
                 console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'expected: '+data.expected);
                 console.warn(tabnivel+tabassert+'   '+calcSpacesForIdTest(assert_id)+'actual: '+data.actual);
-            }
-            else {
-                console.log(tabnivel+tabassert+'\033[31m✘ '+ assert_id+' '+ data.name+'\033[0m');
-                console.log(tabnivel+tabassert+'  \033[31m----\033[0m');
-                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'operator: '+data.operator+'\033[0m');
-                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'expected: '+data.expected+'\033[0m');
-                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'actual: '+data.actual+'\033[0m');
-                console.log(tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'at: '+data.at+'\033[0m');
-                console.log(tabnivel+tabassert+'  \033[31m....\033[0m');
+            } else {
+                console.log(tabcli+tabnivel+tabassert+'\033[31m✘ '+ assert_id+' '+ data.name+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'  \033[31m----\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'operator: '+data.operator+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'expected: '+data.expected+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'actual: '+data.actual+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'   \033[31m'+calcSpacesForIdTest(assert_id)+'at: '+data.at+'\033[0m');
+                console.log(tabcli+tabnivel+tabassert+'  \033[31m....\033[0m');
             }
         }
 
@@ -95,8 +101,23 @@ var tabe = {tape:require('tape')};
 
 
     tabe.onEnd = function() {
-        console.log('theend');
-        assert_id = pass = fail = 0;
+        var totalms = new Date().getTime()-ms;
+        if (isBrowser) {
+            console.log('\n');
+            console.log('%cTotal: '+(pass+fail)+' %c('+totalms+'ms)', 'font-weight:bold; font-size:11px; color:#555', '');
+            console.log('%cPass:  '+(pass), 'font-weight:bold; font-size:11px; color:green');
+            console.warn('%cFail:  '+(fail)+' %c('+fail_ids.join(',')+')', 'font-weight:bold; font-size:11px', 'font-weight:normal');
+            console.log('');
+        } else {
+            // console.log(tabcli+totalms+'ms');
+            console.log('\n');
+            console.log(tabcli+'\033[1mTotal: '+(pass+fail)+'\033[0m \033[90m('+totalms+'ms)\033[0m');
+            console.log(tabcli+'\033[1m\033[32mPass:  '+pass+'\033[0m');
+            console.log(tabcli+'\033[1m\033[31mFail:  '+fail+'\033[0m'+' \033[90m('+fail_ids.join(',')+')\033[0m');
+            console.log('');
+        }
+
+        test_id = assert_id = pass = fail = 0;
     };
 
 
