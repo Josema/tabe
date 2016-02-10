@@ -36,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/Josenzo/tabe/issues"
   },
-  "homepage": "https://github.com/Josenzo/tabe#readme"
+  "homepage": "https://github.com/Josenzo/tabe#readme",
+  "devDependencies": {
+    "through2": "^2.0.1"
+  }
 }

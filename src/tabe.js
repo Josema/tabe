@@ -1,6 +1,6 @@
 
 
-var tabe = {tape:require('tape')};
+var tabe = {};
 
 (function(){
 
@@ -15,11 +15,11 @@ var tabe = {tape:require('tape')};
     var tabassert = '   ';
     var ms;
 
-    tabe.createStream = function ( ) {
+    tabe.createStream = function ( tape ) {
 
         console.log('');
         test_id = assert_id = pass = fail = 0;
-        var stream = tabe.tape.createStream({ objectMode: true });
+        var stream = tape.createStream({ objectMode: true });
         stream.on('data', tabe.onData);
         stream.on('end', tabe.onEnd);
         return stream;

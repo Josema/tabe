@@ -7,8 +7,8 @@
 <body>
   <script src="../dist/tabe.js"></script>
   <script type="text/javascript">
-    window.test = window.tabe.tape;
-    window.tabe.createStream();
+    window.tabe.createStream( window.tape );
+    window.test = window.tape; // Just an alias
   </script>
   <script src="test.js"></script>
 </body>

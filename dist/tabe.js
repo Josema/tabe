@@ -4751,7 +4751,8 @@ function config (name) {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],28:[function(require,module,exports){
 window.tabe = require('./src/tabe');
-},{"./src/tabe":58}],29:[function(require,module,exports){
+window.tape = require('tape');
+},{"./src/tabe":58,"tape":53}],29:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -6578,7 +6579,7 @@ function through (write, end, opts) {
 },{"_process":14,"stream":25}],58:[function(require,module,exports){
 
 
-var tabe = {tape:require('tape')};
+var tabe = {};
 
 (function(){
 
@@ -6593,11 +6594,11 @@ var tabe = {tape:require('tape')};
     var tabassert = '   ';
     var ms;
 
-    tabe.createStream = function ( ) {
+    tabe.createStream = function ( tape ) {
 
         console.log('');
         test_id = assert_id = pass = fail = 0;
-        var stream = tabe.tape.createStream({ objectMode: true });
+        var stream = tape.createStream({ objectMode: true });
         stream.on('data', tabe.onData);
         stream.on('end', tabe.onEnd);
         return stream;
@@ -6733,4 +6734,4 @@ var tabe = {tape:require('tape')};
 module.exports = tabe;
 
 
-},{"tape":53}]},{},[28]);
+},{}]},{},[28]);

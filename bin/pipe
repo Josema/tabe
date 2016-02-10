@@ -4,11 +4,12 @@ var tape = require('tape');
 var through = require('through2');
 var duplexer = require('duplexer');
 
-
-// var tap = tape.createStream({ objectMode: true });  // Not working can't get an object
+// https://github.com/substack/tape/issues/247
+var tap = tape.createStream({ objectMode: true });  // Not working can't get an object
 var tap = tape.createStream();                         // Working
 var out = through();
 var stream = duplexer(tap, out);
+
 
 
 tap.on('data', function(data) {
@@ -23,3 +24,37 @@ process.stdin
 process.on('exit', function() {
   if (stream.errors.length) process.exit(1);
 })
+
+
+
+
+
+
+
+
+
+// Trying to extend methods
+// tape.Test.prototype.test = function (name, opts, cb) {
+//     var self = this;
+//     var t = new Test(name, opts, cb);
+//     this._progeny.push(t);
+//     this.pendingCount++;
+//     console.log('YEAH11111111111111111YEAH11111111111111111YEAH11111111111111111YEAH11111111111111111YEAH11111111111111111YEAH11111111111111111', typeof t)
+//     this.emit('test', 't');
+
+//     t.on('prerun', function () {
+//         self.assertCount++;
+//     })
+    
+//     if (!self._pendingAsserts()) {
+//         nextTick(function () {
+//             self._end();
+//         });
+//     }
+    
+//     nextTick(function() {
+//         if (!self._plan && self.pendingCount == self._progeny.length) {
+//             self._end();
+//         }
+//     });
+// };

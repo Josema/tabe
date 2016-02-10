@@ -4,9 +4,9 @@
 test('First test', function (t) {
 
     t.equal(typeof function(){}, 'function');
-    t.equal(1, 1);
-    t.equal(2, 3);
-    t.equal(3, 3);
+    t.equal(true, true);
+    t.equal(true, false);
+    t.equal(true, true);
     t.end();
 });
 
