@@ -28,7 +28,7 @@
     "stdout"
   ],
   "bin": {
-    "tabe": "./bin/cmd",
+    "tabe": "./bin/cmd"
   },
   "author": "Josema Enzo",
   "license": "MIT",
