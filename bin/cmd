@@ -3,7 +3,7 @@
 var path = require('path');
 var tape = test = require('tape');
 var tabe = require('../src/tabe');
-var stream = tabe.createStream();
+var stream = tabe.createStream( tape );
 
 
 // stream.pipe(process.stdout);

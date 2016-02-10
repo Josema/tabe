@@ -1,6 +1,6 @@
 {
   "name": "tabe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Beautiful tape tests for browsers and CLI.",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "duplexer": "^0.1.1",
-    "tape": "^4.4.0",
-    "through2": "^2.0.0"
+    "tape": "^4.4.0"
   },
   "repository": {
     "type": "git",
