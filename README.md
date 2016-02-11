@@ -2,7 +2,7 @@
 Beautiful tape tests for browsers and cli
 
 ### Cli
-![browser](https://raw.githubusercontent.com/Josenzo/tabe/master/media/tabe-cli.gif)
+![cli](https://raw.githubusercontent.com/Josenzo/tabe/master/media/tabe-cli.gif)
 
 ### Browser
 ![browser](https://raw.githubusercontent.com/Josenzo/tabe/master/media/tabe-browser.gif)
@@ -43,7 +43,7 @@ var test = require('tape');
 var tabe = require('tabe');
 tabe.createStream( test );
 
-test('My first test', () => {
+test('My first test', (t) => {
   t.equal(true, true);
   t.end();
 });
