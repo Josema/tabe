@@ -6681,18 +6681,19 @@ var tabe = {};
 
     tabe.onEnd = function() {
         var totalms = new Date().getTime()-ms;
+        var fail_idsstr = (fail_ids.length>0) ? ' ('+fail_ids.join(',')+')' : '';
         if (isBrowser) {
             console.log('\n');
             console.log('%cTotal: '+(pass+fail)+' %c('+totalms+'ms)', 'font-weight:bold; font-size:11px; color:#555', '');
             console.log('%cPass:  '+(pass), 'font-weight:bold; font-size:11px; color:green');
-            console.warn('%cFail:  '+(fail)+' %c('+fail_ids.join(',')+')', 'font-weight:bold; font-size:11px', 'font-weight:normal');
+            console.warn('%cFail:  '+(fail)+'%c'+fail_idsstr, 'font-weight:bold; font-size:11px', 'font-weight:normal');
             console.log('');
         } else {
             // console.log(tabcli+totalms+'ms');
             console.log('\n');
             console.log(tabcli+'\033[1mTotal: '+(pass+fail)+'\033[0m \033[90m('+totalms+'ms)\033[0m');
             console.log(tabcli+'\033[1m\033[32mPass:  '+pass+'\033[0m');
-            console.log(tabcli+'\033[1m\033[31mFail:  '+fail+'\033[0m'+' \033[90m('+fail_ids.join(',')+')\033[0m');
+            console.log(tabcli+'\033[1m\033[31mFail:  '+fail+'\033[0m'+'\033[90m'+fail_idsstr+'\033[0m');
             console.log('');
         }
 
